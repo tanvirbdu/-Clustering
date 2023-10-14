@@ -1,0 +1,28 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import AgglomerativeClustering
+import matplotlib.pyplot as plt
+
+# Step 1: Load and preprocess the dataset
+data = pd.read_csv('Mall_Customers.csv')
+scaled_features = StandardScaler().fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+
+# Step 2: Perform Hierarchical Clustering
+n_clusters = 3  # You can change this value to get a different number of clusters
+cluster_model = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
+cluster_labels = cluster_model.fit_predict(scaled_features)
+
+# Add cluster labels to the original dataframe
+data['Cluster'] = cluster_labels
+
+# Step 3: Visualize Hierarchical Clustering
+plt.figure(figsize=(10, 6))
+
+# Assuming you want to plot 'Annual Income (k$)' vs 'Spending Score (1-100)'
+plt.scatter(data['Annual Income (k$)'], data['Spending Score (1-100)'], c=cluster_labels, cmap='viridis', s=50)
+plt.xlabel('Annual Income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.title(f'Hierarchical Clustering with {n_clusters} Clusters')
+plt.colorbar()
+
+plt.show()

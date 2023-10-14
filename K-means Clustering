@@ -1,0 +1,32 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+
+data = pd.read_csv('Mall_Customers.csv')
+
+
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+
+
+def perform_kmeans(data, k):
+    kmeans = KMeans(n_clusters=k, random_state=0)
+    return kmeans.fit(data)
+
+def calculate_sse(data, k):
+    kmeans_model = perform_kmeans(data, k)
+    return kmeans_model.inertia_
+
+sse_values = []
+for k in range(1, 16):
+    sse = calculate_sse(scaled_features, k)
+    sse_values.append(sse)
+    print(f'Number of clusters: {k}, SSE: {sse}')
+
+plt.plot(range(1, 16), sse_values, marker='o')
+plt.xlabel('Number of Clusters (K)')
+plt.ylabel('Sum of Squared Errors (SSE)')
+plt.title('Elbow Method For Optimal K')
+plt.show()

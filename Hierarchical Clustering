@@ -1,0 +1,18 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from scipy.cluster.hierarchy import linkage, dendrogram
+import matplotlib.pyplot as plt
+
+# Step 1: Load and preprocess the dataset
+data = pd.read_csv('Mall_Customers.csv')
+scaled_features = StandardScaler().fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+
+# Step 2: Generate Dendrogram
+linkage_matrix = linkage(scaled_features, method='ward')
+
+plt.figure(figsize=(10, 6))
+dendrogram(linkage_matrix, orientation='top', distance_sort='descending', show_leaf_counts=True)
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('Sample Index')
+plt.ylabel('Distance')
+plt.show()
